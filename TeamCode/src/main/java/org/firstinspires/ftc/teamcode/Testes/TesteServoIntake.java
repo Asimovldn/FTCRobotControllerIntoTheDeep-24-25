@@ -16,6 +16,8 @@ public class TesteServoIntake extends LinearOpMode
 
           waitForStart();
 
+          double intakePower;
+
           while (opModeIsActive())
           {
               if (gamepad1.a)
@@ -26,6 +28,21 @@ public class TesteServoIntake extends LinearOpMode
               if (gamepad1.b)
               {
                   intake.MoveServo(Intake.IntakePosition.OUT);
+              }
+
+              if (gamepad1.y)
+              {
+                  intakePower = 1.0;
+              }
+
+              if (gamepad1.x)
+              {
+                  intakePower = 0.0;
+              }
+
+              if (gamepad1.left_bumper)
+              {
+                  intakePower = -1.0;
               }
           }
     }

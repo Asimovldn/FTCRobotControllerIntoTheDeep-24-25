@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Auxiliar;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -13,6 +14,10 @@ public class Intake
     Servo leftWrist;
     Servo rightWrist;
 
+    CRServo intakeServo;
+
+
+
     public enum IntakePosition
     {
         OUT, IN
@@ -24,9 +29,11 @@ public class Intake
         leftWrist = hardwareMap.get(Servo.class, "left_wrist_intake");
         rightWrist = hardwareMap.get(Servo.class, "right_wrist_intake");
 
+        intakeServo = hardwareMap.get(CRServo.class, "intake_servo");
+
     }
 
-    public void Move(IntakePosition intakePosition)
+    public void MoveServo(IntakePosition intakePosition)
     {
         switch (intakePosition)
         {
@@ -40,5 +47,10 @@ public class Intake
                 rightWrist.setPosition(outRightPosition);
                 break;
         }
+    }
+
+    public void setIntakePower(double power)
+    {
+        intakeServo.setPower(power);
     }
 }

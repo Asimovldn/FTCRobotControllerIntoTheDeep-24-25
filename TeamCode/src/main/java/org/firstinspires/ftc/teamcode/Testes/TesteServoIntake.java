@@ -20,12 +20,12 @@ public class TesteServoIntake extends LinearOpMode
           {
               if (gamepad1.a)
               {
-                  intake.Move(Intake.IntakePosition.IN);
+                  intake.MoveServo(Intake.IntakePosition.IN);
               }
 
               if (gamepad1.b)
               {
-                  intake.Move(Intake.IntakePosition.OUT);
+                  intake.MoveServo(Intake.IntakePosition.OUT);
               }
           }
     }

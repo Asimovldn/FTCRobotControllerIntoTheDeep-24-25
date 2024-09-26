@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Intake
 {
-    double outLeftPosition = 0.0;
+    double outLeftPosition = 1.0;
     double outRightPosition = 0.0;
     double inLeftPosition = 0.0;
-    double inRightPosition = 0.0;
+    double inRightPosition = 1.0;;
 
     Servo leftWrist;
     Servo rightWrist;

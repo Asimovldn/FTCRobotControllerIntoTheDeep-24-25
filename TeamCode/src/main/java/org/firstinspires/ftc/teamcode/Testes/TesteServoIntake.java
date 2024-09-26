@@ -16,7 +16,7 @@ public class TesteServoIntake extends LinearOpMode
 
           waitForStart();
 
-          double intakePower;
+          double intakePower = 0.0;
 
           while (opModeIsActive())
           {
@@ -44,6 +44,8 @@ public class TesteServoIntake extends LinearOpMode
               {
                   intakePower = -1.0;
               }
+
+              intake.setIntakePower(intakePower);
           }
     }
 }

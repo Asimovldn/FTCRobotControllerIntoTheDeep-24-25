@@ -66,7 +66,6 @@ public class Intake
         intakeServo.setPower(power);
     }
 
-    
     public void setSlidePower(double power)
     {
         intakeSlideMotor.setPower(power);

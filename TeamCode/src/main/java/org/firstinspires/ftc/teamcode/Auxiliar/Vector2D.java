@@ -5,7 +5,7 @@ public class Vector2D
     public double x;
     public double y;
 
-    double magnitude;
+    public double magnitude;
 
     public Vector2D(double x, double y)
     {

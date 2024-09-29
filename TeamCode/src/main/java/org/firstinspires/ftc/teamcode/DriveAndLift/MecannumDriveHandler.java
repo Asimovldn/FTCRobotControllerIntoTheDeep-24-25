@@ -5,6 +5,14 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.ImuOrientationOnRobot;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.Auxiliar.MecannumWheelKinematics;
+import org.firstinspires.ftc.teamcode.Auxiliar.Vector2D;
+import org.firstinspires.ftc.teamcode.DriveAndLift.Controls.TrapezoidalMotionProfile;
 
 public class MecannumDriveHandler
 {
@@ -63,17 +71,52 @@ public class MecannumDriveHandler
         rBD.setPower ( (y + x - r) / denominator);
 
     }
-
-   /* public void FielCentric(double x , double y , double r)
+    public void FieldCentric(double x , double y , double r)
     {
+        YawPitchRollAngles robotOrientation = imu.getRobotYawPitchRollAngles();
+
         Vector2D vector = new Vector2D(x,y);
-        double angle = 1;
+        double angle = robotOrientation.getYaw(AngleUnit.RADIANS);
 
         Vector2D rotVector = Vector2D.rotateVector(vector, angle);
 
-        Analog(rotVector.x, rotVector.y, r );
+        Analog(rotVector.x, rotVector.y, r);
+    }
+
+    public void MoveOnStraightLine(Vector2D finalPos)
+    {
+        double distance = finalPos.magnitude;
+
+        TrapezoidalMotionProfile motionProfile = new TrapezoidalMotionProfile(DriveConstants.MAX_VEL,
+                DriveConstants.MAX_ACCEL, distance);
+
+        ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
+
+        while (motionProfile.isBusy)
+        {
+            double[] profileValues = motionProfile.calculateMotionProfile(timer.time());
+
+            Vector2D direction = Vector2D.normalizeVector(finalPos);
+
+            double[] robotVelocities = new double[] {direction.y * profileValues[1], direction.x * profileValues[1], 0}; // colocar velocidade angular
+            double[] robotAccels = new double[] {direction.y * profileValues[2], direction.x * profileValues[2], 0}; // colocar velocidade angular
+
+            double[] wheelVelocities = MecannumWheelKinematics.inverseKinematics(robotVelocities);
+            double[] wheelAccels = MecannumWheelKinematics.inverseKinematics(robotAccels);
+                    
+            // ordem: lBD, lFD, rBD, rFD
+            double[] motorPowers; // colocar no FF
+        }
+
+    }
+
+    void setMotorPowers(double lBDPower, double lFDPower, double rBDPower, double rFDPower)
+    {
+        lBD.setPower(lBDPower);
+        lFD.setPower(lFDPower);
+        rBD.setPower(rBDPower);
+        rFD.setPower(rFDPower);
+    }
 
 
-
-    } */
 }

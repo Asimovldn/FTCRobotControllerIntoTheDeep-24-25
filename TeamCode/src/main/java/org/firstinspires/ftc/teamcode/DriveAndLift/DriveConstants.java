@@ -9,4 +9,10 @@ public class DriveConstants
             new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP,
                     RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)
     );
+
+    public static double MAX_VEL; // CM/S
+    public static double MAX_ACCEL; // CM/S^2
+
+    public static double trackWidth; // CM
+    public static double wheelRadius; // CM
 }

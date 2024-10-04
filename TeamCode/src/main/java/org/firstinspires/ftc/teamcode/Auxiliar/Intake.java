@@ -21,6 +21,8 @@ public class Intake
 
     DcMotorEx intakeSlideMotor;
 
+    public int linearSlideLimit = 1600; // Ticks || 1760 o maximo
+
 
 
     public enum IntakePosition
@@ -42,6 +44,7 @@ public class Intake
 
         intakeSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        intakeSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intakeSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
@@ -68,6 +71,22 @@ public class Intake
 
     public void setSlidePower(double power)
     {
+        if (intakeSlideMotor.getCurrentPosition() >= linearSlideLimit && power > 0.0) {
+            intakeSlideMotor.setPower(0.0);
+            return;
+        }
+
         intakeSlideMotor.setPower(power);
+    }
+
+    public void resetSlideEncoder()
+    {
+        intakeSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intakeSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public int getSlidePosition()
+    {
+        return intakeSlideMotor.getCurrentPosition();
     }
 }

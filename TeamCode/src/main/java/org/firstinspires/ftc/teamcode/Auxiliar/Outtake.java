@@ -14,11 +14,11 @@ public class Outtake
     Servo leftServo;
     Servo rightServo;
 
-    double inLeftPosition = 0.0;
+    double inLeftPosition = 1.0;
     double inRightPosition = 0.0;
 
-    double outLeftPosition = 0.0;
-    double outRightPosition = 0.0;
+    double outLeftPosition = 0.5;
+    double outRightPosition = 0.5;
 
     public enum OuttakePosition
     {

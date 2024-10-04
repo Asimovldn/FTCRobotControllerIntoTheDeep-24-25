@@ -12,6 +12,8 @@ public class Gamepaddrive {
 
     Gamepad gamepad;
 
+    boolean reducted = false;
+
     private MecannumDriveHandler Drive;
 
     public Gamepaddrive(Gamepad gamepad, MecannumDriveHandler Drive) {
@@ -20,14 +22,31 @@ public class Gamepaddrive {
     }
 
     public void update() {
+
+
         x = gamepad.left_stick_x;
         y = gamepad.left_stick_y;
         Rotacao = gamepad.right_stick_x;
 
         Drive.Analog(x, y, Rotacao);
 
+        if (reducted)
+        {
+            x = gamepad.left_stick_x;
+            y = gamepad.left_stick_y;
+            Rotacao = gamepad.right_stick_x;
+
+            Drive.Analog(x / 2, y / 2, Rotacao / 2);
+
+        }else {
+
+            x = gamepad.left_stick_x;
+            y = gamepad.left_stick_y;
+            Rotacao = gamepad.right_stick_x;
+
+            Drive.Analog(x, y, Rotacao);
+
+        }
     }
-
-
 
 }

@@ -18,6 +18,13 @@ public class TesteLinearSlideIntake extends LinearOpMode
         while (opModeIsActive())
         {
             intake.setSlidePower(-gamepad1.left_stick_y);
+            telemetry.addData("Slide Position", intake.getSlidePosition());
+            telemetry.update();
+
+            if (gamepad1.y)
+            {
+                intake.resetSlideEncoder();
+            }
         }
     }
 }

@@ -16,6 +16,13 @@ public class Gamepaddrive {
 
     private MecannumDriveHandler Drive;
 
+    enum Centric
+    {
+        ROBOT_CENTRIC, FIELD_CENTRIC
+    };
+
+    Centric CurrentCentric = Centric.FIELD_CENTRIC;
+
     public Gamepaddrive(Gamepad gamepad, MecannumDriveHandler Drive) {
         this.gamepad = gamepad;
         this.Drive = Drive;
@@ -28,24 +35,22 @@ public class Gamepaddrive {
         y = gamepad.left_stick_y;
         Rotacao = gamepad.right_stick_x;
 
-        Drive.Analog(x, y, Rotacao);
-
         if (reducted)
         {
-            x = gamepad.left_stick_x;
-            y = gamepad.left_stick_y;
-            Rotacao = gamepad.right_stick_x;
+            x /= 2;
+            y /= 2;
+            Rotacao /= 2;
+        }
 
-            Drive.Analog(x / 2, y / 2, Rotacao / 2);
+        switch (CurrentCentric)
+        {
+            case ROBOT_CENTRIC:
+                Drive.Analog(x,y,Rotacao);
+                break;
 
-        }else {
-
-            x = gamepad.left_stick_x;
-            y = gamepad.left_stick_y;
-            Rotacao = gamepad.right_stick_x;
-
-            Drive.Analog(x, y, Rotacao);
-
+            case FIELD_CENTRIC:
+            //    Drive.FieldCentric(x,y,Rotacao);
+                break;
         }
     }
 

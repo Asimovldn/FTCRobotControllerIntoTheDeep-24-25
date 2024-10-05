@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.DriveAndLift;
+package org.firstinspires.ftc.teamcode.Auxiliar;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -50,8 +50,10 @@ public class MecannumDriveHandler
         // Inicializa imu
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(DriveConstants.imuParameters);
+        imu.resetYaw();
 
     }
+
 
     public void Analog(double x, double y, double r)
     {
@@ -64,16 +66,14 @@ public class MecannumDriveHandler
 
     }
 
-   /* public void FielCentric(double x , double y , double r)
+    public void FielCentric(double x , double y , double r)
     {
         Vector2D vector = new Vector2D(x,y);
-        double angle = 1;
+        double angle = Math.toRadians(imu.getRobotYawPitchRollAngles().getYaw());
 
-        Vector2D rotVector = Vector2D.rotateVector(vector, angle);
+        Vector2D rotVector = Vector2D.rotateVector(vector, -angle);
 
         Analog(rotVector.x, rotVector.y, r );
 
-
-
-    } */
+    }
 }

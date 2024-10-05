@@ -20,21 +20,31 @@ public class Outtake
     double outLeftPosition = 0.5;
     double outRightPosition = 0.5;
 
+    int maxSlideVel = 30; // Ticks/frame
+
+    int currentSlidesPosition = 0;
+
     public enum OuttakePosition
     {
         OUT, IN
     };
+
+    PIDControl leftCorrectionSlideControl = new PIDControl(0.02,0.002,0);
+    PIDControl rightCorrectionSlideControl = new PIDControl(0.02,0.002,0);
 
     public Outtake(HardwareMap hardwareMap)
     {
         leftSlide = hardwareMap.get(DcMotorEx.class, "left_outtake_slide");
         rightSlide = hardwareMap.get(DcMotorEx.class, "right_outtake_slide");
 
-        leftSlide.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightSlide.setDirection(DcMotorSimple.Direction.FORWARD);
 
         leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -43,10 +53,31 @@ public class Outtake
         rightServo = hardwareMap.get(Servo.class, "right_outtake_servo");
     }
 
-    public void Move(double power)
+    public void Move(float power)
     {
-        leftSlide.setPower(power);
-        rightSlide.setPower(power);
+        if (power >= 0)
+        {
+            if (currentSlidesPosition >= 0)
+                currentSlidesPosition += Math.round(power * maxSlideVel);
+            else
+                currentSlidesPosition = 0;
+        } else {
+            if (currentSlidesPosition >= 0)
+                currentSlidesPosition += Math.round(power * 40);
+            else {
+                currentSlidesPosition = 0;
+            }
+        }
+
+        double leftCorrection = leftCorrectionSlideControl.calculate(currentSlidesPosition, leftSlide.getCurrentPosition());
+        double rightCorrection = rightCorrectionSlideControl.calculate(currentSlidesPosition, rightSlide.getCurrentPosition());
+
+        if (currentSlidesPosition < 5 && power < 0)
+            return;
+
+        leftSlide.setPower(leftCorrection);
+        rightSlide.setPower(rightCorrection);
+
     }
 
     public void MoveServo(OuttakePosition outtakePosition)
@@ -68,5 +99,10 @@ public class Outtake
     public double[] getCurrentSlidePosition()
     {
         return new double[] {leftSlide.getCurrentPosition(), rightSlide.getCurrentPosition()};
+    }
+
+    public double getCurrentGoalPosition()
+    {
+        return currentSlidesPosition;
     }
 }

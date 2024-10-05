@@ -31,6 +31,8 @@ public class TesteOuttake extends LinearOpMode
             double[] slidePos = outtake.getCurrentSlidePosition();
             telemetry.addData("left slide", slidePos[0]);
             telemetry.addData("right_slide", slidePos[1]);
+
+            telemetry.addData("goalPos,", outtake.getCurrentGoalPosition());
             telemetry.update();
         }
     }

@@ -64,4 +64,9 @@ public class Outtake
                 break;
         }
     }
+
+    public double[] getCurrentSlidePosition()
+    {
+        return new double[] {leftSlide.getCurrentPosition(), rightSlide.getCurrentPosition()};
+    }
 }

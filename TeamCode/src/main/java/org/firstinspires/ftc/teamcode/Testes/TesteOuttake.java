@@ -25,6 +25,13 @@ public class TesteOuttake extends LinearOpMode
             {
                 outtake.MoveServo(Outtake.OuttakePosition.OUT);
             }
+
+            outtake.Move(-gamepad1.left_stick_y / 2);
+
+            double[] slidePos = outtake.getCurrentSlidePosition();
+            telemetry.addData("left slide", slidePos[0]);
+            telemetry.addData("right_slide", slidePos[1]);
+            telemetry.update();
         }
     }
 }

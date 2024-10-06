@@ -23,7 +23,7 @@ public class Gamepaddrive {
 
     enum Reduction
     {
-        STANDARD, FORTH
+        STANDARD, HALF
     }
 
     Reduction CurrentReduction = Reduction.STANDARD;
@@ -51,7 +51,7 @@ public class Gamepaddrive {
             case STANDARD:
                 if (changeReduction && timerReduction.time() > 0.5)
                 {
-                    CurrentReduction = Reduction.FORTH;
+                    CurrentReduction = Reduction.HALF;
                     timerReduction.reset();
                 }
                 x = gamepad.left_stick_x;
@@ -59,7 +59,7 @@ public class Gamepaddrive {
                 rotation = gamepad.right_stick_x;
                 break;
 
-            case FORTH:
+            case HALF:
                 if (changeReduction && timerReduction.time() > 0.5)
                 {
                     CurrentReduction = Reduction.STANDARD;

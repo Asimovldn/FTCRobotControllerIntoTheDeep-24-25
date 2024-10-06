@@ -17,6 +17,8 @@ public class TrapezoidalMotionProfile
 
     public TrapezoidalMotionProfile(double maxVel, double maxAccel, double distance)
     {
+        isBusy = true;
+
         this.maxVel = maxVel;
         this.maxAccel = maxAccel;
         this.distance = distance;
@@ -52,6 +54,8 @@ public class TrapezoidalMotionProfile
         if (time < totalTime)
         {
             isBusy = true;
+        } else {
+            isBusy = false;
         }
 
         if (!isBusy)

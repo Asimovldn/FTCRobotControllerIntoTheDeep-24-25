@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Auxiliar.Controls.TrapezoidalMotionProfile;
 import org.firstinspires.ftc.teamcode.Auxiliar.DriveConstants;
+import org.firstinspires.ftc.teamcode.Auxiliar.MecannumDriveHandler;
+import org.firstinspires.ftc.teamcode.Auxiliar.Vector2D;
 
 @Config
 @TeleOp
@@ -27,19 +29,21 @@ public class TesteMotionProfile extends LinearOpMode
         telemetry.addData("accel", 0);
         telemetry.update();
 
-        waitForStart();
+        MecannumDriveHandler drive = new MecannumDriveHandler(hardwareMap, telemetry, this);
 
 
         ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
-        timer.reset();
-        while (opModeIsActive())
-        {
-            double[] values = motionProfile.calculateMotionProfile(timer.time());
 
-            telemetry.addData("pos", values[0]);
-            telemetry.addData("vel", values[1]);
-            telemetry.addData("accel", values[2]);
-            telemetry.update();
+
+        waitForStart();
+
+        timer.reset();
+
+
+        while (opModeIsActive()) {
+            drive.MoveOnStraightLine(new Vector2D(0, distance));
+            drive.MoveOnStraightLine(new Vector2D(0, -distance));
         }
+
     }
 }

@@ -22,13 +22,13 @@ public class FeedForward
         this.kg = kg;
     }
 
-    public double calculate(double vSetpoint, double aSetPoint)
+    public double calculate(double vSetpoint, double aSetPoint, int direction)
     {
-        return ks + vSetpoint * kv + aSetPoint * ka;
+        return ks * direction + vSetpoint * kv + aSetPoint * ka;
     }
 
-    public double calculate(double vSetpoint, double aSetpoint, double gFactor)
+    public double calculate(double vSetpoint, double aSetpoint, double gFactor, int direction)
     {
-        return ks + vSetpoint * kv + aSetpoint * ka + gFactor * kg;
+        return ks * direction + vSetpoint * kv + aSetpoint * ka + gFactor * kg;
     }
 }

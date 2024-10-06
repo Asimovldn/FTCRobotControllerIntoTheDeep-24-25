@@ -66,7 +66,7 @@ public class MecannumDriveHandler
 
     }
 
-    public void FielCentric(double x , double y , double r)
+    public void FieldCentric(double x , double y , double r)
     {
         Vector2D vector = new Vector2D(x,y);
         double angle = Math.toRadians(imu.getRobotYawPitchRollAngles().getYaw());

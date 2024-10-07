@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.Auxiliar;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -15,6 +18,8 @@ public class Intake
     Servo rightWrist;
 
     CRServo intakeServo;
+
+    DcMotorEx intakeSlideMotor;
 
 
 
@@ -31,6 +36,13 @@ public class Intake
 
         intakeServo = hardwareMap.get(CRServo.class, "intake_servo");
 
+        intakeSlideMotor = hardwareMap.get(DcMotorEx.class, "slide_intake");
+
+        intakeSlideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        intakeSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        intakeSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void MoveServo(IntakePosition intakePosition)
@@ -57,5 +69,10 @@ public class Intake
     public void setIntakePower(double power)
     {
         intakeServo.setPower(power);
+    }
+
+    public void setSlidePower(double power)
+    {
+        intakeSlideMotor.setPower(power);
     }
 }

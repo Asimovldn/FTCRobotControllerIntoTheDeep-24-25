@@ -24,6 +24,8 @@ public class TesteMotionProfileOuttakeSlide extends LinearOpMode
         telemetry.addData("accel ", 0);
         telemetry.addData("motorVel", 0);
         telemetry.addData("motorPos,", 0);
+        telemetry.addData("motorVel1", 0);
+        telemetry.addData("motorPos1", 0);
 
         telemetry.update();
 

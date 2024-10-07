@@ -36,6 +36,14 @@ public class Outtake
 
     public static double kg = 0.001;
 
+    public static double kp = 2.5;
+    public static double ki = 0.00001;
+    public static double kd = 0.01;
+
+    public static double kpHold = 0.005;
+    public static double kiHold = 0;
+    public static double kdHold = 0;
+
     public enum OuttakePosition
     {
         OUT, IN
@@ -54,7 +62,7 @@ public class Outtake
         rightSlide = hardwareMap.get(DcMotorEx.class, "right_outtake_slide");
 
         leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
         leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -96,8 +104,10 @@ public class Outtake
             double[] values = motionProfile.calculateMotionProfile(timer.time());
             int direction = (int)(distance / Math.abs(distance));
 
+            PIDControl pidControl = new PIDControl(kp,ki,kd);
+
             leftSlide.setVelocity(values[1] * direction);
-            rightSlide.setVelocity(values[1] * direction);
+            rightSlide.setVelocity(values[1] * direction + pidControl.calculate(leftSlide.getCurrentPosition(), rightSlide.getCurrentPosition()));
 
             telemetry.addData("pos ", values[0] * direction);
             telemetry.addData("vel ", values[1] * direction);
@@ -114,8 +124,10 @@ public class Outtake
 
     public void HoldPosition()
     {
+        PIDControl pidControl = new PIDControl(kpHold,kiHold,kdHold);
+
         leftSlide.setPower(kg);
-        rightSlide.setPower(kg);
+        rightSlide.setPower(kg + pidControl.calculate(leftSlide.getCurrentPosition(), rightSlide.getCurrentPosition()));
     }
 
 

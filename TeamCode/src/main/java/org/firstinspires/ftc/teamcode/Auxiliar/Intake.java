@@ -20,7 +20,7 @@ public class Intake
 
     public enum IntakePosition
     {
-        OUT, IN
+        OUT, IN, HALF
     }
 
 
@@ -45,6 +45,11 @@ public class Intake
             case OUT:
                 leftWrist.setPosition(outLeftPosition);
                 rightWrist.setPosition(outRightPosition);
+                break;
+
+            case HALF:
+                leftWrist.setPosition(0.5);
+                rightWrist.setPosition((0.5));
                 break;
         }
     }

@@ -13,7 +13,7 @@ public class GamepadInOuttake
     ElapsedTime switchTimer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
 
     public static int LOW_BASKET_POSITION = 2100; // Ticks
-    public static int HIGH_BASKET_POSITION = 3000; // Ticks
+    public static int HIGH_BASKET_POSITION = 3500; // Ticks
 
     enum Take
     {
@@ -21,6 +21,13 @@ public class GamepadInOuttake
     }
 
     Take currentTake = Take.OUTTAKE;
+
+    enum OuttakeHeight
+    {
+        RETRACT, LOW_BASKET, HIGH_BASKET
+    }
+
+    OuttakeHeight height = OuttakeHeight.RETRACT;
 
     public GamepadInOuttake(Gamepad gamepad, Outtake outtake /*Intake intake*/)
     {
@@ -90,12 +97,16 @@ public class GamepadInOuttake
         if (gamepad.y)
         {
             outtake.MoveSlide(LOW_BASKET_POSITION - outtake.getCurrentSlidePosition()[0]);
+            height = OuttakeHeight.LOW_BASKET;
+
         } else if (gamepad.b)
         {
             outtake.MoveSlide(HIGH_BASKET_POSITION - outtake.getCurrentSlidePosition()[0]);
+            height = OuttakeHeight.HIGH_BASKET;
         } else if (gamepad.a)
         {
             outtake.MoveSlide(-outtake.getCurrentSlidePosition()[0]);
+            height = OuttakeHeight.RETRACT;
         } else {
             outtake.HoldPosition();
         }
@@ -109,6 +120,13 @@ public class GamepadInOuttake
         {
             outtake.MoveServo(Outtake.OuttakePosition.OUT);
         }
+
+        if (height == OuttakeHeight.RETRACT && -gamepad.left_stick_y < 0)
+        {
+            outtake.setPower(-gamepad.left_stick_y / 4);
+        }
+
+
     }
 }
 

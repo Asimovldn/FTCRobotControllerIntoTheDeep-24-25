@@ -122,6 +122,12 @@ public class Outtake
         }
     }
 
+    public void setPower(double power)
+    {
+        leftSlide.setPower(power);
+        rightSlide.setPower(power);
+    }
+
     public void HoldPosition()
     {
         PIDControl pidControl = new PIDControl(kpHold,kiHold,kdHold);

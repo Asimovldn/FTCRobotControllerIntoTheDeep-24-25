@@ -28,10 +28,10 @@ public class Outtake
     double inRightPosition = 0.0;
 
     double outLeftPosition = 0.5;
-    double outRightPosition = 0.5;
+    double outRightPosition = 1.0 ;
 
-    double MAX_VEL_OUTTAKE = 700; // Ticks/s
-    double MAX_ACCEL_OUTTAKE = 700; // Ticks/s^2
+    double MAX_VEL_OUTTAKE = 1500; // Ticks/s
+    double MAX_ACCEL_OUTTAKE = 1500; // Ticks/s^2
 
 
     public static double kg = 0.001;

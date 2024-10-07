@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Auxiliar;
+package org.firstinspires.ftc.teamcode.Auxiliar.Controls;
 
 public class PIDControl
 {
@@ -33,5 +33,4 @@ public class PIDControl
 
         return proporcional * kp + integral * ki + derivative * kd;
     }
-
 }

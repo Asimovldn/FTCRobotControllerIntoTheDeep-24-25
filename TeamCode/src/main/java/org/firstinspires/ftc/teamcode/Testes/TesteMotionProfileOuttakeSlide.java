@@ -28,11 +28,39 @@ public class TesteMotionProfileOuttakeSlide extends LinearOpMode
         telemetry.update();
 
         while (!gamepad1.a)
-        {}
+        {
+            if (isStopRequested())
+            {
+                break;
+            }
+        }
 
-        outtake.MoveSlide(1000);
-        sleep(1000);
-        outtake.MoveSlide(-1000);
+        outtake.MoveSlide(1500);
+
+        while (opModeIsActive())
+        {
+            while (!gamepad1.a)
+            {
+                outtake.HoldPosition();
+                if (isStopRequested())
+                {
+                    break;
+                }
+            }
+
+            outtake.MoveSlide(-1000);
+
+            while (!gamepad1.a)
+            {
+                outtake.HoldPosition();
+                if (isStopRequested())
+                {
+                    break;
+                }
+            }
+
+            outtake.MoveSlide(1000);
+        }
 
     }
 }

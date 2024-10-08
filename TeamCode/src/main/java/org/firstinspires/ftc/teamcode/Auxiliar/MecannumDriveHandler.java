@@ -12,7 +12,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Auxiliar.Controls.FeedForward;
+import org.firstinspires.ftc.teamcode.Auxiliar.Controls.PIDControl;
 import org.firstinspires.ftc.teamcode.Auxiliar.Controls.TrapezoidalMotionProfile;
 
 @Config
@@ -28,6 +30,10 @@ public class MecannumDriveHandler
     public static double kv = 0.035;
     public static double ka = 0.01;
     public static double ks = 0.01;
+
+    public static double kpAng;
+    public static double kiAng;
+    public static double kdAng;
 
 
 
@@ -150,6 +156,44 @@ public class MecannumDriveHandler
 
         }
 
+    }
+
+    public void turn(double angle)
+    {
+        imu.resetYaw();
+
+
+
+        TrapezoidalMotionProfile motionProfile = new TrapezoidalMotionProfile(DriveConstants.MAX_ANGULAR_VEL,
+                DriveConstants.MAX_ANGULAR_ACCEL, angle);
+
+        ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
+
+        while (motionProfile.isBusy && !opMode.isStopRequested())
+        {
+            FeedForward ffWheels = new FeedForward(kv, ka, ks);
+
+
+            double[] profileValues = motionProfile.calculateMotionProfile(timer.time());
+
+            double[] robotVelocities = new double[] {0,0, profileValues[1]};
+            double[] robotAccels = new double[] {0,0, profileValues[2]};
+
+            double[] wheelVelocities = MecannumWheelKinematics.inverseKinematics(robotVelocities);
+            double[] wheelAccels = MecannumWheelKinematics.inverseKinematics(robotAccels);
+
+            // ordem: lBD, lFD, rBD, rFD
+
+            double[] motorPowers = new double[]
+                    {
+                            ffWheels.calculate(wheelVelocities[3], wheelAccels[3], (int)Math.signum(wheelVelocities[3])),
+                            ffWheels.calculate(wheelVelocities[0], wheelAccels[0], (int)Math.signum(wheelVelocities[0])),
+                            ffWheels.calculate(wheelVelocities[2], wheelAccels[2], (int)Math.signum(wheelVelocities[2])),
+                            ffWheels.calculate(wheelVelocities[1], wheelAccels[1], (int)Math.signum(wheelVelocities[1]))
+                    };
+
+            setMotorPowers(motorPowers[0], motorPowers[1], motorPowers[2], motorPowers[3]);
+        }
     }
 
     void setMotorPowers(double lBDPower, double lFDPower, double rBDPower, double rFDPower)

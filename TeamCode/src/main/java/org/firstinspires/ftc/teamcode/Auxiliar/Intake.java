@@ -12,7 +12,7 @@ public class Intake
     double outLeftPosition = 1.0;
     double outRightPosition = 0.0;
     double inLeftPosition = 0.0;
-    double inRightPosition = 1.0;;
+    double inRightPosition = 1.0;
 
     Servo leftWrist;
     Servo rightWrist;
@@ -60,8 +60,8 @@ public class Intake
                 break;
 
             case HALF:
-                leftWrist.setPosition(0.5);
-                rightWrist.setPosition((0.5));
+                leftWrist.setPosition(0.7);
+                rightWrist.setPosition((0.3));
                 break;
         }
     }

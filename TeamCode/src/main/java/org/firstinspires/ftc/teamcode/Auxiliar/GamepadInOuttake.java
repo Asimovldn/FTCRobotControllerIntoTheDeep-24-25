@@ -29,11 +29,11 @@ public class GamepadInOuttake
 
     OuttakeHeight height = OuttakeHeight.RETRACT;
 
-    public GamepadInOuttake(Gamepad gamepad, Outtake outtake /*Intake intake*/)
+    public GamepadInOuttake(Gamepad gamepad, Outtake outtake, Intake intake)
     {
         this.gamepad = gamepad;
         this.outtake = outtake;
-        //this.intake = intake;
+        this.intake = intake;
 
         switchTimer.reset();
     }
@@ -75,15 +75,8 @@ public class GamepadInOuttake
             intake.MoveServo(Intake.IntakePosition.IN);
         }
 
-        if (gamepad.b)
-        {
-            // Slide para frente
-        }
-
-        if (gamepad.a)
-        {
-            // Slide para tras
-        }
+        intake.setSlidePower(-gamepad.right_stick_y);
+        intake.setIntakePower(-gamepad.left_stick_y);
     }
 
     void outtakeControl()

@@ -42,6 +42,8 @@ public class Intake
 
         intakeSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        intakeSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         intakeSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
@@ -73,6 +75,22 @@ public class Intake
 
     public void setSlidePower(double power)
     {
+        if (power < 0.0 && intakeSlideMotor.getCurrentPosition() < 10) {
+            intakeSlideMotor.setPower(0.0);
+            return;
+        }
+
+        if (power > 0.0 && intakeSlideMotor.getCurrentPosition() > 1300)
+        {
+            intakeSlideMotor.setPower(0.0);
+            return;
+        }
+
         intakeSlideMotor.setPower(power);
+    }
+
+    public int getSlidePos()
+    {
+        return intakeSlideMotor.getCurrentPosition();
     }
 }

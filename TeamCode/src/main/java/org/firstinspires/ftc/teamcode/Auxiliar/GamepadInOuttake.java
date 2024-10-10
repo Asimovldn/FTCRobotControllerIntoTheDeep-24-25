@@ -75,7 +75,7 @@ public class GamepadInOuttake
             intake.MoveServo(Intake.IntakePosition.IN);
         }
 
-        intake.setSlidePower(-gamepad.right_stick_y);
+        intake.setSlidePower(-gamepad.right_stick_y / 3);
         intake.setIntakePower(-gamepad.left_stick_y);
     }
 

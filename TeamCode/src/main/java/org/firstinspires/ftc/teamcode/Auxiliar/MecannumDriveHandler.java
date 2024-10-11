@@ -1,11 +1,23 @@
 package org.firstinspires.ftc.teamcode.Auxiliar;
 
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.Auxiliar.Controls.FeedForward;
+import org.firstinspires.ftc.teamcode.Auxiliar.Controls.PIDControl;
+import org.firstinspires.ftc.teamcode.Auxiliar.Controls.TrapezoidalMotionProfile;
+
+@Config
 public class MecannumDriveHandler
 {
     DcMotorEx lBD;
@@ -15,8 +27,25 @@ public class MecannumDriveHandler
 
     IMU imu;
 
-    public MecannumDriveHandler(HardwareMap hardwareMap)
+    public static double kv = 0.035;
+    public static double ka = 0.01;
+    public static double ks = 0.01;
+
+    public static double kpAng;
+    public static double kiAng;
+    public static double kdAng;
+
+
+
+    Telemetry telemetry;
+
+    LinearOpMode opMode;
+
+    public MecannumDriveHandler(HardwareMap hardwareMap, Telemetry telemetry, LinearOpMode opMode)
     {
+        this.opMode = opMode;
+        this.telemetry = telemetry;
+
         // Seta os motores à suas respectivas variáveis
         lBD = hardwareMap.get(DcMotorEx.class, "left_back");
         lFD = hardwareMap.get(DcMotorEx.class, "left_front");
@@ -75,5 +104,103 @@ public class MecannumDriveHandler
 
         Analog(rotVector.x, rotVector.y, r );
 
+    }
+
+    public void MoveOnStraightLine(Vector2D finalPos)
+    {
+        double distance = finalPos.magnitude;
+
+        TrapezoidalMotionProfile motionProfile = new TrapezoidalMotionProfile(DriveConstants.MAX_VEL,
+                DriveConstants.MAX_ACCEL, distance);
+
+        ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
+
+
+        while (motionProfile.isBusy && !opMode.isStopRequested())
+        {
+            FeedForward ffWheels = new FeedForward(kv,ka,ks);
+
+            double[] profileValues = motionProfile.calculateMotionProfile(timer.time());
+
+            Vector2D direction = Vector2D.normalizeVector(finalPos);
+
+            double[] robotVelocities = new double[] {direction.y * profileValues[1], direction.x * profileValues[1], 0}; // colocar velocidade angular
+            double[] robotAccels = new double[] {direction.y * profileValues[2], direction.x * profileValues[2], 0}; // colocar velocidade angular
+
+            double[] wheelVelocities = MecannumWheelKinematics.inverseKinematics(robotVelocities);
+            double[] wheelAccels = MecannumWheelKinematics.inverseKinematics(robotAccels);
+
+            // ordem: lBD, lFD, rBD, rFD
+
+            double[] motorPowers = new double[]
+                    {
+                            ffWheels.calculate(wheelVelocities[3], wheelAccels[3], (int)Math.signum(wheelVelocities[3])),
+                            ffWheels.calculate(wheelVelocities[0], wheelAccels[0], (int)Math.signum(wheelVelocities[0])),
+                            ffWheels.calculate(wheelVelocities[2], wheelAccels[2], (int)Math.signum(wheelVelocities[2])),
+                            ffWheels.calculate(wheelVelocities[1], wheelAccels[1], (int)Math.signum(wheelVelocities[1]))
+                    };
+
+            setMotorPowers(motorPowers[0], motorPowers[1], motorPowers[2], motorPowers[3]);
+
+
+            telemetry.addData("lBD", lBD.getVelocity(AngleUnit.RADIANS));
+
+
+            telemetry.addData("alvo 0", wheelVelocities[3]);
+            telemetry.addData("alvo 1", wheelVelocities[0]);
+            telemetry.addData("alvo 2", wheelVelocities[2]);
+            telemetry.addData("alvo 3", wheelVelocities[1]);
+
+            telemetry.addData("time", timer.time());
+            telemetry.update();
+
+        }
+
+    }
+
+    public void turn(double angle)
+    {
+        imu.resetYaw();
+
+
+
+        TrapezoidalMotionProfile motionProfile = new TrapezoidalMotionProfile(DriveConstants.MAX_ANGULAR_VEL,
+                DriveConstants.MAX_ANGULAR_ACCEL, angle);
+
+        ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
+
+        while (motionProfile.isBusy && !opMode.isStopRequested())
+        {
+            FeedForward ffWheels = new FeedForward(kv, ka, ks);
+
+
+            double[] profileValues = motionProfile.calculateMotionProfile(timer.time());
+
+            double[] robotVelocities = new double[] {0,0, profileValues[1]};
+            double[] robotAccels = new double[] {0,0, profileValues[2]};
+
+            double[] wheelVelocities = MecannumWheelKinematics.inverseKinematics(robotVelocities);
+            double[] wheelAccels = MecannumWheelKinematics.inverseKinematics(robotAccels);
+
+            // ordem: lBD, lFD, rBD, rFD
+
+            double[] motorPowers = new double[]
+                    {
+                            ffWheels.calculate(wheelVelocities[3], wheelAccels[3], (int)Math.signum(wheelVelocities[3])),
+                            ffWheels.calculate(wheelVelocities[0], wheelAccels[0], (int)Math.signum(wheelVelocities[0])),
+                            ffWheels.calculate(wheelVelocities[2], wheelAccels[2], (int)Math.signum(wheelVelocities[2])),
+                            ffWheels.calculate(wheelVelocities[1], wheelAccels[1], (int)Math.signum(wheelVelocities[1]))
+                    };
+
+            setMotorPowers(motorPowers[0], motorPowers[1], motorPowers[2], motorPowers[3]);
+        }
+    }
+
+    void setMotorPowers(double lBDPower, double lFDPower, double rBDPower, double rFDPower)
+    {
+        lBD.setPower(lBDPower);
+        lFD.setPower(lFDPower);
+        rBD.setPower(rBDPower);
+        rFD.setPower(rFDPower);
     }
 }

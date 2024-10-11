@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Testes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -12,7 +14,9 @@ public class TesteControle extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        MecannumDriveHandler drive = new MecannumDriveHandler(hardwareMap);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        MecannumDriveHandler drive = new MecannumDriveHandler(hardwareMap,telemetry, this);
         Gamepaddrive gamepadDrive = new Gamepaddrive(gamepad1, drive);
         waitForStart();
 

@@ -37,7 +37,7 @@ public class TesteMotionProfileOuttakeSlide extends LinearOpMode
             }
         }
 
-        outtake.MoveSlide(2500);
+       // outtake.MoveSlide(2500);
 
         while (opModeIsActive())
         {
@@ -50,7 +50,7 @@ public class TesteMotionProfileOuttakeSlide extends LinearOpMode
                 }
             }
 
-            outtake.MoveSlide(-2000);
+           // outtake.MoveSlide(-2000);
 
             while (!gamepad1.a)
             {
@@ -61,7 +61,7 @@ public class TesteMotionProfileOuttakeSlide extends LinearOpMode
                 }
             }
 
-            outtake.MoveSlide(2000);
+            //outtake.MoveSlide(2000);
         }
 
     }

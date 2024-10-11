@@ -93,7 +93,7 @@ public class Outtake
         }
     }
 
-    public void MoveSlide(double distance)
+    public void MoveSlide(double distance, Gamepaddrive drive)
     {
         TrapezoidalMotionProfile motionProfile = new TrapezoidalMotionProfile(MAX_VEL_OUTTAKE, MAX_ACCEL_OUTTAKE, Math.abs(distance));
 
@@ -101,6 +101,7 @@ public class Outtake
 
         while (motionProfile.isBusy && !opMode.isStopRequested())
         {
+            drive.update();
             double[] values = motionProfile.calculateMotionProfile(timer.time());
             int direction = (int)(distance / Math.abs(distance));
 

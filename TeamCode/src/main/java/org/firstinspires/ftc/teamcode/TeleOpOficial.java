@@ -1,5 +1,4 @@
-package org.firstinspires.ftc.teamcode.Testes;
-
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -11,22 +10,24 @@ import org.firstinspires.ftc.teamcode.Auxiliar.MecannumDriveHandler;
 import org.firstinspires.ftc.teamcode.Auxiliar.Outtake;
 
 @TeleOp
-public class TesteControleOuttake extends LinearOpMode
+public class TeleOpOficial extends LinearOpMode
 {
     @Override
     public void runOpMode() throws InterruptedException
     {
-
         Outtake outtake = new Outtake(hardwareMap, this, telemetry);
         Intake intake = new Intake(hardwareMap);
-        GamepadInOuttake gamepadInOuttake = new GamepadInOuttake(gamepad1, outtake, intake);
-        Gamepaddrive gamepaddrive = new Gamepaddrive(gamepad1, new MecannumDriveHandler(hardwareMap));
+        GamepadInOuttake gamepadInOuttake = new GamepadInOuttake(gamepad2, outtake, intake);
+        MecannumDriveHandler driveHandler = new MecannumDriveHandler(hardwareMap);
+        Gamepaddrive gamepaddrive = new Gamepaddrive(gamepad1, driveHandler);
 
         waitForStart();
 
         while (opModeIsActive())
         {
             gamepadInOuttake.update(gamepaddrive);
+            gamepaddrive.update();
         }
+
     }
 }

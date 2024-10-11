@@ -38,7 +38,7 @@ public class GamepadInOuttake
         switchTimer.reset();
     }
 
-    public void update()
+    public void update(Gamepaddrive gamepaddrive)
     {
         switch (currentTake)
         {
@@ -47,7 +47,7 @@ public class GamepadInOuttake
                 break;
 
             case OUTTAKE:
-                outtakeControl();
+                outtakeControl(gamepaddrive);
                 break;
         }
     }
@@ -79,7 +79,7 @@ public class GamepadInOuttake
         intake.setIntakePower(-gamepad.left_stick_y);
     }
 
-    void outtakeControl()
+    void outtakeControl(Gamepaddrive gamepaddrive)
     {
         if (gamepad.left_bumper && switchTimer.time() > 0.5)
         {
@@ -89,16 +89,16 @@ public class GamepadInOuttake
 
         if (gamepad.y)
         {
-            outtake.MoveSlide(LOW_BASKET_POSITION - outtake.getCurrentSlidePosition()[0]);
+            outtake.MoveSlide(LOW_BASKET_POSITION - outtake.getCurrentSlidePosition()[0], gamepaddrive);
             height = OuttakeHeight.LOW_BASKET;
 
         } else if (gamepad.b)
         {
-            outtake.MoveSlide(HIGH_BASKET_POSITION - outtake.getCurrentSlidePosition()[0]);
+            outtake.MoveSlide(HIGH_BASKET_POSITION - outtake.getCurrentSlidePosition()[0], gamepaddrive);
             height = OuttakeHeight.HIGH_BASKET;
         } else if (gamepad.a)
         {
-            outtake.MoveSlide(-outtake.getCurrentSlidePosition()[0]);
+            outtake.MoveSlide(-outtake.getCurrentSlidePosition()[0], gamepaddrive);
             height = OuttakeHeight.RETRACT;
         } else {
             outtake.HoldPosition();

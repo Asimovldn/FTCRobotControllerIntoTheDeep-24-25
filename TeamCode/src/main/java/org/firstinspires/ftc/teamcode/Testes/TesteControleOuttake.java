@@ -20,7 +20,7 @@ public class TesteControleOuttake extends LinearOpMode
         Outtake outtake = new Outtake(hardwareMap, this, telemetry);
         Intake intake = new Intake(hardwareMap);
         GamepadInOuttake gamepadInOuttake = new GamepadInOuttake(gamepad1, outtake, intake);
-        Gamepaddrive gamepaddrive = new Gamepaddrive(gamepad1, new MecannumDriveHandler(hardwareMap));
+        Gamepaddrive gamepaddrive = new Gamepaddrive(gamepad1, new MecannumDriveHandler(hardwareMap, telemetry, this));
 
         waitForStart();
 

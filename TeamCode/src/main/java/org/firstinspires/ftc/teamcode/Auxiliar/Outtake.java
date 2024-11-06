@@ -83,12 +83,12 @@ public class Outtake
         {
             case IN:
                 leftServo.setPosition(inLeftPosition);
-                //rightServo.setPosition(inRightPosition);
+                rightServo.setPosition(inRightPosition);
                 break;
 
             case OUT:
                 leftServo.setPosition(outLeftPosition);
-                //rightServo.setPosition(outRightPosition);
+                rightServo.setPosition(outRightPosition);
                 break;
         }
     }
@@ -108,7 +108,7 @@ public class Outtake
             PIDControl pidControl = new PIDControl(kp,ki,kd);
 
             leftSlide.setVelocity(values[1] * direction);
-            //rightSlide.setVelocity(values[1] * direction + pidControl.calculate(leftSlide.getCurrentPosition(), rightSlide.getCurrentPosition()));
+            rightSlide.setVelocity(values[1] * direction + pidControl.calculate(leftSlide.getCurrentPosition(), rightSlide.getCurrentPosition()));
 
             telemetry.addData("pos ", values[0] * direction);
             telemetry.addData("vel ", values[1] * direction);
@@ -126,7 +126,7 @@ public class Outtake
     public void setPower(double power)
     {
         leftSlide.setPower(power);
-        //rightSlide.setPower(power);
+        rightSlide.setPower(power);
     }
 
     public void HoldPosition()
@@ -134,7 +134,7 @@ public class Outtake
         PIDControl pidControl = new PIDControl(kpHold,kiHold,kdHold);
 
         leftSlide.setPower(kg);
-        //rightSlide.setPower(kg + pidControl.calculate(leftSlide.getCurrentPosition(), rightSlide.getCurrentPosition()));
+        rightSlide.setPower(kg + pidControl.calculate(leftSlide.getCurrentPosition(), rightSlide.getCurrentPosition()));
     }
 
 

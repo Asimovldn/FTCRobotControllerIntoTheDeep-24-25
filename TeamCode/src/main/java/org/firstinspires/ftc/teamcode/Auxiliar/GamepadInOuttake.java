@@ -38,6 +38,14 @@ public class GamepadInOuttake
         switchTimer.reset();
     }
 
+    public GamepadInOuttake(Gamepad gamepad, Outtake outtake)
+    {
+        this.gamepad = gamepad;
+        this.outtake = outtake;
+
+        switchTimer.reset();
+    }
+
     public void update(Gamepaddrive gamepaddrive)
     {
         switch (currentTake)
@@ -51,6 +59,12 @@ public class GamepadInOuttake
                 break;
         }
     }
+
+    public void updateOuttake(Gamepaddrive gamepaddrive)
+    {
+        outtakeControl(gamepaddrive);
+    }
+
 
     void intakeControl()
     {

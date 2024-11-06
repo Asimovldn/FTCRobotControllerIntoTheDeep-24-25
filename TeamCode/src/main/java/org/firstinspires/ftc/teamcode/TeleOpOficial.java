@@ -18,7 +18,7 @@ public class TeleOpOficial extends LinearOpMode
         Outtake outtake = new Outtake(hardwareMap, this, telemetry);
         Intake intake = new Intake(hardwareMap);
         GamepadInOuttake gamepadInOuttake = new GamepadInOuttake(gamepad2, outtake, intake);
-        MecannumDriveHandler driveHandler = new MecannumDriveHandler(hardwareMap);
+        MecannumDriveHandler driveHandler = new MecannumDriveHandler(hardwareMap, telemetry, this);
         Gamepaddrive gamepaddrive = new Gamepaddrive(gamepad1, driveHandler);
 
         waitForStart();
